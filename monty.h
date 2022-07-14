@@ -1,10 +1,17 @@
 #ifndef MONTY_H
 #define MONTY_H
+#define _GNU_SOURCE
+#define DELIMITERS "\n\t\r "
+
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <ctype.h>
 #include <string.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
+#include <fcntl.h>
+#include <ctype.h>
 
 /**
  * struct stack_s - doubly linked list representation of a stack (or queue)
@@ -13,7 +20,7 @@
  * @next: points to the next element of the stack (or queue)
  *
  * Description: doubly linked list node structure
- * for stack, queues, LIFO, FIFO
+ * for stack, queues, LIFO, FIFO Holberton project
  */
 typedef struct stack_s
 {
@@ -23,12 +30,12 @@ typedef struct stack_s
 } stack_t;
 
 /**
- * struct instruction_s - opcode and its function
+ * struct instruction_s - opcoode and its function
  * @opcode: the opcode
  * @f: function to handle the opcode
  *
  * Description: opcode and its function
- * for stack, queues, LIFO, FIFO
+ * for stack, queues, LIFO, FIFO Holberton project
  */
 typedef struct instruction_s
 {
@@ -36,20 +43,31 @@ typedef struct instruction_s
 	void (*f)(stack_t **stack, unsigned int line_number);
 } instruction_t;
 
-/*opcodes*/
-void push(stack_t **stack, unsigned int line_number);
-void pall(stack_t **stack, __attribute__((unused)) unsigned int line_number);
-void pop(stack_t **stack, unsigned int line_num);
-void nop(stack_t **stack, unsigned int line_num);
-void swap(stack_t **stack, unsigned int line_num);
-void add(stack_t **stack, unsigned int line_num);
+/* struct search function */
+int opcode_struct(char *opcode, stack_t **stack, unsigned int line_number);
 
-/*linked list functions*/
-void del_node(stack_t **stack, const int idx);
-stack_t *addnode(stack_t **stack, const int num);
-int isNumber(char s[]);
-void free(stack_t *stack);
+/* stack functions */
+void push(stack_t **stack, unsigned int line_number, char *n);
+void pop(stack_t **stack, unsigned int line_number);
+void swap(stack_t **stack, unsigned int line_number);
+void nop(stack_t **stack, unsigned int line_number);
 
-instruction_t get_opcode(char *);
+/* print functions */
+void pall(stack_t **stack, unsigned int line_number);
+void pint(stack_t **stack, unsigned int line_number);
+void pchar(stack_t **stack, unsigned int line_number);
+void pstr(stack_t **stack, unsigned int line_number);
 
-#endif
+/* calc functions */
+void _add(stack_t **stack, unsigned int line_number);
+void _sub(stack_t **stack, unsigned int line_number);
+void _mul(stack_t **stack, unsigned int line_number);
+void _div(stack_t **stack, unsigned int line_number);
+void _mod(stack_t **stack, unsigned int line_number);
+
+/* utility functions */
+size_t stack_length(stack_t **stack);
+void free_stack(stack_t **stack);
+void free_all(stack_t *stack, char *line, FILE *fp);
+
+#endif /* MONTY_H */

@@ -1,46 +1,51 @@
 #include "monty.h"
+
 /**
- * main - main program
- * @argc: number arguments
- * @argv: strings passed
- * Return: 0 on success
- */
-int main(size_t argc, char **argv)
+* main - main function of monty program
+* @argc: number of arguments
+* @argv: pointer to array of strings of arguments
+* Return: 0 on success, -1 on failure
+*/
+int main(int argc, char *argv[])
 {
-	stack_t *stack;
-	FILE *file;
-	char *buffer = NULL, *line[2] = {NULL, NULL};
-	size_t len = 0, count = 1;
-	int nums;
-	void (*f)(stack_t **stack, unsigned int line_num);
+	FILE *fp;
+	stack_t *stack = NULL;
+	char *line = NULL;
+	char *opcode;
+	char *n;
+	unsigned int line_number;
+	size_t len = 0;
+	ssize_t read;
 
 	if (argc != 2)
 	{
-		fprintf(stderr, "Usage: monty file\n");
+		printf("USAGE: monty file\n");
 		exit(EXIT_FAILURE);
 	}
-	file = fopen(argv[1], "r");
-	if (file == NULL)
+
+	fp = fopen(argv[1], "r");
+	if (fp == NULL)
 	{
-		fprintf(stderr, "Error: Can't open file %s\n", argv[1]);
+		printf("Error: Can't open file %s\n", argv[1]);
 		exit(EXIT_FAILURE);
 	}
-	while ((nums = getline(&buffer, &len, file)) != -1)
+
+	line_number = 0;
+	while ((read = getline(&line, &len, fp)) != -1)
 	{
-		line[0] = strtok(buffer, " \t\n");
-		if (line[0] && line[0][0] != '#')
+		line_number++;
+		opcode = strtok(line, DELIMITERS);
+		if (opcode == NULL || strncmp(opcode, "#", 1) == 0)
+			continue;
+		if (strcmp(opcode, "push") == 0)
 		{
-			f = get_opcode(line[0]);
-			if (!f)
-			{
-				fprintf(stderr, "L%ld: unknown instruction %s\n", count, line[0]);
-				exit(EXIT_FAILURE);
-			}
-			f(&stack, count);
+			n = strtok(NULL, DELIMITERS);
+			push(&stack, line_number, n);
 		}
-		count++;
+		else
+			opcode_struct(opcode, &stack, line_number);
 	}
-	free(&stack);
-	fclose(file);
-	return (0);
+
+	free_all(stack, line, fp);
+	return (EXIT_SUCCESS);
 }
