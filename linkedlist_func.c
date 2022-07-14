@@ -4,6 +4,7 @@
  * addnode - adds a new node to the linkedlist
  * @stack: pointer to the stack
  * @num: number of the node
+ * Return: newNode
  */
 stack_t *addnode(stack_t **stack, const int num)
 {
@@ -37,6 +38,7 @@ stack_t *addnode(stack_t **stack, const int num)
  * del_node - deletes a node from the linkedlist
  * @stack: pointer to the stack
  * @idx: index to be deleted
+ * Return: nothing
  */
 void del_node(stack_t **stack, const int idx)
 {
@@ -49,7 +51,7 @@ void del_node(stack_t **stack, const int idx)
 		*stack = temp->next;
 		temp = temp->next;
 	}
-	for (i = 0; i < idx-1; i++)
+	for (i = 0; i < idx - 1; i++)
 	{
 		temp = temp->next;
 		temp->next = temp->next->next;

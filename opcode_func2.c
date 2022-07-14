@@ -9,8 +9,10 @@ void swap(stack_t **stack, unsigned int line_num)
 {
 	stack_t *temp;
 	int count = 1, num;
-	/*if (*stack == 0)
-	 * return;*/
+	/*
+	 * if (*stack == 0)
+	 * return;
+	 */
 	temp = *stack;
 	while (temp != NULL)
 	{
